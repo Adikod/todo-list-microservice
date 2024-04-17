@@ -1,0 +1,167 @@
+definitions:
+  handlers.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.Task:
+    properties:
+      activeAt:
+        description: Дата активации задачи
+        type: string
+      createdAt:
+        description: Дата создания задачи
+        type: string
+      done:
+        description: Статус выполнения задачи
+        type: boolean
+      id:
+        description: ID задачи
+        type: string
+      title:
+        description: Заголовок задачи
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/todo-list/tasks:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список задач по указанному статусу
+      parameters:
+      - description: Статус задачи ('active' или 'done'), по умолчанию 'active'
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список задач
+          schema:
+            items:
+              $ref: '#/definitions/models.Task'
+            type: array
+        "500":
+          description: Ошибка при получении списка задач
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Получить список задач по статусу
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Создает новую задачу на основе переданных данных
+      parameters:
+      - description: Данные для создания задачи
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.Task'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: task created successfully
+          schema:
+            type: string
+        "400":
+          description: Ошибка при разборе JSON
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Ошибка при создании задачи
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Создать новую задачу
+      tags:
+      - tasks
+  /api/todo-list/tasks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет задачу по ее ID
+      parameters:
+      - description: ID задачи для удаления
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: task deleted successfully
+          schema:
+            type: string
+        "404":
+          description: Задача не найдена
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Удалить задачу
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Обновляет существующую задачу на основе переданных данных
+      parameters:
+      - description: ID задачи для обновления
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Данные для обновления задачи
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/models.Task'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: task updated successfully
+          schema:
+            type: string
+        "400":
+          description: Ошибка при разборе JSON
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "404":
+          description: Задача не найдена
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Обновить задачу
+      tags:
+      - tasks
+  /api/todo-list/tasks/{id}/done:
+    post:
+      consumes:
+      - application/json
+      description: Помечает задачу как выполненную по ее ID
+      parameters:
+      - description: ID задачи для пометки как выполненной
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: task marked as done successfully
+          schema:
+            type: string
+        "404":
+          description: Задача не найдена
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Пометить задачу как выполненную
+      tags:
+      - tasks
+swagger: "2.0"
