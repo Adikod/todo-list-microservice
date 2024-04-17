@@ -8,3 +8,18 @@
 
 ```bash 
 git clone https://github.com/Adikod/todo-list-microservice.git
+```
+
+## Запуск
+
+Для запуска есть несколько вариантов:
+## Make
+```bash
+make build
+make run
+```
+## Docker
+```bash
+docker build -t todo-list-microservice . 
+docker run -d -p 8080:8080 todo-list-microservice
+```
